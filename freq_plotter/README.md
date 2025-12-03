@@ -23,7 +23,7 @@
 如果从零开始：
 
 ```bash
-cd source-code-5m/freq_plotter
+cd freq_plotter
 cargo build
 ```
 
@@ -34,7 +34,7 @@ cargo build
 ### 1. 启动 Rust 图形界面
 
 ```bash
-cd source-code-5m/freq_plotter
+cd freq_plotter
 cargo run -- \
     --port /dev/cu.usbserial-0001 \
     --baud 115200 \
