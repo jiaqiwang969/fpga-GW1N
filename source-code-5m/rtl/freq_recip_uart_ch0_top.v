@@ -58,86 +58,37 @@ module freq_recip_uart_ch0_top (
     localparam integer COARSE_WIDTH   = 24;
 
     //====================================================================
-    // 传感器输入同步 + 上升沿检测
+    // fast 核心：在 clk_fast 域进行 N 周期互易计数 + 粗 TDC
+    // 当前阶段我们先让 clk_fast = clk（都是 50MHz），
+    // 只完成结构拆分，后续再接入 rPLL 将 clk_fast 提升到更高频。
     //====================================================================
-    wire sensor_edge;
+    wire                    tdc_busy_fast;
+    wire                    tdc_valid_fast;
+    wire                    tdc_ack_fast;
+    wire [COARSE_WIDTH-1:0] tdc_coarse_fast;
+    wire [7:0]              tdc_fine_raw_fast;
 
-    edge_detect u_edge_sensor (
-        .clk       (clk),
-        .rst       (rst),
-        .signal_in (sensor0),
-        .edge_out  (sensor_edge)
+    // 当前骨架阶段：fast 域和 sys 域使用同一时钟
+    wire clk_fast = clk;
+
+    recip_core_fast #(
+        .N_CYCLES    (N_CYCLES),
+        .COARSE_WIDTH(COARSE_WIDTH)
+    ) u_recip_core_fast (
+        .clk_fast        (clk_fast),
+        .rst             (rst),
+        .sensor0         (sensor0),
+        .tdc_busy        (tdc_busy_fast),
+        .tdc_valid_fast  (tdc_valid_fast),
+        .tdc_ack_fast    (tdc_ack_fast),
+        .tdc_coarse_fast (tdc_coarse_fast),
+        .tdc_fine_raw_fast(tdc_fine_raw_fast)
     );
 
     //====================================================================
-    // 互易计数控制：
-    //   - 在 sensor0 的第 1 个上升沿产生 start 脉冲；
-    //   - 在第 N 个上升沿产生 stop 脉冲；
-    //   - simple_tdc_core 在 start/stop 之间计数 clk_fast 周期数。
+    // fast -> sys 壳层（当前 clk_fast=clk，仍是单时钟域，
+    // 但保留结构，方便后续真正跨时钟）
     //====================================================================
-    reg        measuring    = 1'b0;
-    reg [15:0] edge_count   = 16'd0;
-    reg        tdc_start    = 1'b0;
-    reg        tdc_stop     = 1'b0;
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            measuring  <= 1'b0;
-            edge_count <= 16'd0;
-            tdc_start  <= 1'b0;
-            tdc_stop   <= 1'b0;
-        end else begin
-            tdc_start <= 1'b0;
-            tdc_stop  <= 1'b0;
-
-            if (!measuring) begin
-                if (sensor_edge) begin
-                    measuring  <= 1'b1;
-                    edge_count <= 16'd1;
-                    tdc_start  <= 1'b1; // 第 1 个上升沿触发 start
-                end
-            end else begin
-                if (sensor_edge) begin
-                    if (edge_count == N_CYCLES - 1) begin
-                        // 第 N 个上升沿：触发 stop，结束当前测量
-                        measuring  <= 1'b0;
-                        edge_count <= 16'd0;
-                        tdc_stop   <= 1'b1;
-                    end else begin
-                        edge_count <= edge_count + 16'd1;
-                    end
-                end
-            end
-        end
-    end
-
-    //====================================================================
-    // simple_tdc_core 实例：
-    //   当前使用 clk 作为计数时钟（50MHz 粗时间），后续可替换为更高速的 clk_fast。
-    //====================================================================
-    wire                    tdc_busy;
-    wire                    tdc_valid;
-    wire [COARSE_WIDTH-1:0] tdc_coarse;
-    wire [7:0]              tdc_fine_raw;
-    reg                     tdc_ack = 1'b0;
-
-    simple_tdc_core #(
-        .COARSE_WIDTH(COARSE_WIDTH),
-        .FINE_WIDTH  (8)
-    ) u_tdc_core (
-        .clk_fast    (clk),      // 先使用 50MHz，保证稳定工作
-        .rst         (rst),
-        .start       (tdc_start),
-        .stop        (tdc_stop),
-        .ack         (tdc_ack),
-        .busy        (tdc_busy),
-        .valid       (tdc_valid),
-        .coarse_count(tdc_coarse),
-        .fine_raw    (tdc_fine_raw)
-    );
-
-    // 对外仍然使用 result_valid / coarse_latched 接口
-    // 注意：此版本中 clk_fast 与 clk 相同，同步逻辑仍然保留，方便后续切换到高速时钟。
     reg [COARSE_WIDTH-1:0]   coarse_latched = {COARSE_WIDTH{1'b0}};
     reg                      result_valid   = 1'b0;
 
@@ -149,25 +100,28 @@ module freq_recip_uart_ch0_top (
             tdc_valid_sync1 <= 1'b0;
             tdc_valid_sync2 <= 1'b0;
         end else begin
-            tdc_valid_sync1 <= tdc_valid;
+            tdc_valid_sync1 <= tdc_valid_fast;
             tdc_valid_sync2 <= tdc_valid_sync1;
         end
     end
 
     wire tdc_valid_clk = tdc_valid_sync1 & ~tdc_valid_sync2;
 
+    reg tdc_ack_reg = 1'b0;
+    assign tdc_ack_fast = tdc_ack_reg;
+
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             coarse_latched <= {COARSE_WIDTH{1'b0}};
             result_valid   <= 1'b0;
-            tdc_ack        <= 1'b0;
+            tdc_ack_reg    <= 1'b0;
         end else begin
             result_valid <= 1'b0;
-            tdc_ack      <= 1'b0;
+            tdc_ack_reg  <= 1'b0;
             if (tdc_valid_clk) begin
-                coarse_latched <= tdc_coarse;
+                coarse_latched <= tdc_coarse_fast;
                 result_valid   <= 1'b1;
-                tdc_ack        <= 1'b1; // 告知 TDC 结果已消费，清除 valid
+                tdc_ack_reg    <= 1'b1; // 告知 fast 域结果已消费，清除 valid
             end
         end
     end

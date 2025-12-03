@@ -153,3 +153,4 @@ python scripts/freq_recip_monitor.py \
 
 这些尝试都可以先在 `source-code-5m` 这个独立快照里做，不会影响你主工程里已经验证过的其它方案。 
 
+# fpga-GW1N
