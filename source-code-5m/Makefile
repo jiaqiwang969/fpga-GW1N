@@ -2,7 +2,9 @@
 # GW1N-LV9 互易频率计数器 (N=400 周期) - 开源工具链 Makefile
 #------------------------------------------------------------------------------
 # 顶层模块 : freq_recip_uart_ch0_top
-# 计数时钟 : 50 MHz (板载晶振，sys_clk_50m)
+# 计数时钟 :
+#   - sys 域: 50 MHz (板载晶振，sys_clk_50m)
+#   - fast 域: 当前仍为 50 MHz（后续通过 rPLL 升到更高频）
 # 测量方式 : 对传感器信号的 N=400 个上升沿之间的时间做互易计数
 # 串口输出 : "R=NNNNNN,CCCCCC\r\n"
 #             NNNNNN = N 的 16 进制 (0x000190)
@@ -25,8 +27,10 @@
 # 目标器件 & 参考时钟
 DEVICE      := GW1N-LV9QN48C6/I5
 FAMILY      := GW1N-9
-# 顶层中使用的参考时钟频率（Hz），当前为板载 50MHz
+# 顶层 sys 域参考时钟频率（Hz），当前为板载 50MHz
 REF_CLK_HZ  := 50000000
+# fast 尺子参考时钟频率（Hz），当前通过 rPLL 配置为 200MHz
+FAST_CLK_HZ := 200000000
 
 # 目录
 RTL_DIR     := rtl
@@ -42,6 +46,7 @@ VERILOG_SRCS := \
 	$(RTL_DIR)/edge_detect.v \
 	$(RTL_DIR)/uart_tx.v \
 	$(RTL_DIR)/simple_tdc_core.v \
+	$(RTL_DIR)/gowin_rpll_400m.v \
 	$(RTL_DIR)/recip_core_fast.v \
 	$(RTL_DIR)/freq_recip_uart_ch0_top.v
 
@@ -115,16 +120,20 @@ prog: $(BIT_FILE)
 	openFPGALoader -c ft232 $(BIT_FILE)
 
 #==============================================================================
-# 串口监控 + 频率计算 (Python 脚本)
+# 串口监控 + 频率实时曲线 (Rust freq_plotter)
 #==============================================================================
 .PHONY: monitor
 monitor:
 	@echo "=========================================="
-	@echo "启动互易频率计数 UART 监控..."
-	@echo "  注意: 请先在仓库根目录激活 .venv_uart，确保 pyserial 安装完成。"
-	@echo "  当前参考时钟 REF_CLK_HZ = $(REF_CLK_HZ) Hz"
+	@echo "启动互易频率计数 UART 监控 (Rust GUI)..."
+	@echo "  串口: /dev/cu.usbserial-0001  波特率: 115200"
+	@echo "  fast 尺子参考时钟 FAST_CLK_HZ = $(FAST_CLK_HZ) Hz"
 	@echo "=========================================="
-	python $(SCRIPT_DIR)/freq_recip_monitor.py --clk $(REF_CLK_HZ)
+	cargo run --manifest-path freq_plotter/Cargo.toml -- \
+		--port /dev/cu.usbserial-0001 \
+		--baud 115200 \
+		--clk $(FAST_CLK_HZ) \
+		--window-sec 10
 
 #==============================================================================
 # 清理
@@ -142,6 +151,6 @@ help:
 	@echo "可用目标:"
 	@echo "  make / make all   - 综合+布局布线+生成比特流"
 	@echo "  make prog         - 通过 FT232 下载到 GW1N FPGA (SRAM)"
-	@echo "  make monitor      - 启动 Python 串口监控脚本"
+	@echo "  make monitor      - 启动 Rust 频率实时曲线 GUI (freq_plotter)"
 	@echo "  make clean        - 删除构建目录 $(BUILD_DIR)"
 	@echo "  make help         - 显示本帮助"

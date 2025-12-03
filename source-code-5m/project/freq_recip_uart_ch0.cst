@@ -12,8 +12,8 @@ IO_LOC  "rst_n" 28;                // 复位按钮（低有效）
 IO_PORT "rst_n" IO_TYPE=LVCMOS33 PULL_MODE=UP;
 
 // 单通道传感器输入（CH0）
-// 传感器蓝线接到：J2 上排第2针 -> J2-3 -> FPGA 管脚 3
-IO_LOC  "sensor0" 3;
+// 传感器蓝线接到：J2 对应 FPGA 管脚 10（全局时钟引脚，现作为普通输入使用）
+IO_LOC  "sensor0" 10;
 // 开启施密特触发输入以减小门限附近噪声导致的抖动
 IO_PORT "sensor0" IO_TYPE=LVCMOS33 SCHMITT=YES;
 

@@ -1,13 +1,18 @@
-# GW1N-LV9 50 MHz 互易频率计数器 (N=400 周期版)
+# GW1N-LV9 互易频率计数器 + Rust 实时频率 GUI
 
-这个目录是对你目前 **已经跑通、非常稳定** 的 50 MHz 互易频率计数器方案的一个「完整、可独立编译」快照。
+这个目录包含：
 
-目标是：  
-在不引入 PLL / 400 MHz 等复杂因素的前提下，用板载 50 MHz 时钟做一个干净的“基准版本”，便于后续对比和迭代。
+- 一个 **互易频率计数器** FPGA 工程（当前 fast 尺子已支持通过 rPLL 提升）；
+- 一个配套的 **Rust 频率实时曲线 GUI**（`freq_plotter/`）。
+
+目标是：
+
+- 用干净的 N 周期互易计数结构，作为所有 TDC / 差频 / 混频方案的“基准”；
+- 同时有一个跨平台 GUI，可以直观看到频率随时间的抖动和漂移。
 
 ---
 
-## 功能概述
+## 功能概述（FPGA 端）
 
 - 顶层模块：`freq_recip_uart_ch0_top`
 - 计数时钟：`sys_clk_50m` (50 MHz)
@@ -45,17 +50,25 @@
 
 ```text
 source-code-5m/
-├── Makefile                    # 本子工程的构建脚本 (yosys + nextpnr-himbaechel + gowin_pack)
-├── README.md                   # 当前说明文档
+├── Makefile                        # 本子工程的构建脚本 (yosys + nextpnr-himbaechel + gowin_pack)
+├── README.md                       # 当前说明文档（本文件）
 ├── project/
-│   └── freq_recip_uart_ch0.cst # GW1N-LV9 QFN48 的引脚约束 (J2 接口 + LED + UART)
+│   └── freq_recip_uart_ch0.cst     # GW1N-LV9 QFN48 的引脚约束 (J2 接口 + LED + UART)
 ├── rtl/
-│   ├── edge_detect.v           # 三段同步 + 上升沿检测
-│   ├── simple_tdc_core.v       # 极简版 TDC 核心 (目前只做粗时间计数)
-│   ├── uart_tx.v               # 115200 bps UART 发送模块
-│   └── freq_recip_uart_ch0_top.v  # 顶层：互易计数 + UART 打包 + LED 指示
-└── scripts/
-    └── freq_recip_monitor.py   # Python 串口监控脚本，计算频率并打印
+│   ├── edge_detect.v               # 三段同步 + 上升沿检测
+│   ├── simple_tdc_core.v           # 极简版 TDC 核心 (目前只做粗时间计数)
+│   ├── recip_core_fast.v           # fast 域 N 周期互易计数控制
+│   ├── gowin_rpll_400m.v           # rPLL 包装（用于把 50MHz 放大到 fast 尺子时钟）
+│   ├── uart_tx.v                   # 115200 bps UART 发送模块
+│   └── freq_recip_uart_ch0_top.v   # 顶层：互易计数 + UART 打包 + LED 指示
+├── scripts/                        # 一些历史分析脚本（FFT 等，可选）
+│   └── freq_live_plot.py           # （可选）Python 实时曲线脚本（保留作参考）
+└── freq_plotter/
+    ├── Cargo.toml                  # Rust GUI 工程（egui + serialport）
+    ├── README.md                   # Rust GUI 使用说明
+    └── src/
+        ├── main.rs                 # 串口读取 + 互易计数解析 + 实时曲线
+        └── measurements.rs         # 滑动窗口数据结构
 ```
 
 ---
@@ -117,26 +130,7 @@ openFPGALoader -c ft232 build_fpga/freq_recip_uart_ch0_top.fs
 - 复位键松开后，D14 常亮（`led_lock`，这里直接拉高表示“系统在跑”）；
 - D13 会周期性点亮一小段时间，表示每次完成一组测量。
 
-然后在同一个虚拟环境里运行监控脚本：
-
-```bash
-cd /Users/jqwang/131-出差回来后的集中整顿-1127/Frequency_counter
-source .venv_uart/bin/activate
-
-cd source-code-5m
-make monitor
-```
-
-默认串口是 `/dev/cu.usbserial-0001`，时钟频率参数为 `--clk 50000000`。  
-如果串口名有变化，可以直接手动运行：
-
-```bash
-python scripts/freq_recip_monitor.py \
-    --port /dev/cu.usbserial-xxxx \
-    --clk 50000000
-```
-
-你应该可以再次看到之前那种稳定的输出，用来作为后续一切 TDC / 差频 / 混频方案的 **基准尺子**。
+然后可以使用 Rust GUI 或 Python `freq_live_plot.py` 来监控频率。
 
 ---
 

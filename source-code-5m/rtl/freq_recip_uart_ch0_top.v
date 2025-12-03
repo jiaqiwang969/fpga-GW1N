@@ -41,35 +41,51 @@ module freq_recip_uart_ch0_top (
     //====================================================================
     // 时钟与复位
     //====================================================================
-    // 统一在本顶层维护一个“参考时钟频率”参数，方便后续从 50MHz 切换到更高频。
-    localparam integer REF_CLK_HZ = 50_000_000;
+    // 统一在本顶层维护“sys 域”和“fast 域”的参考时钟频率参数。
+    // 当前配置:
+    //   - sys 域:  50 MHz (板载晶振)
+    //   - fast 域: 200 MHz (由 rPLL 从 50MHz 倍频得到)
+    localparam integer REF_CLK_SYS_HZ  = 50_000_000;
+    localparam integer REF_CLK_FAST_HZ = 200_000_000;
 
-    wire clk = sys_clk_50m;      // 当前仍使用板载 50MHz 作为主时钟（控制 & UART & 计数）
+    // sys 域（UART/LED 等慢逻辑）
+    wire clk_sys = sys_clk_50m;      // 板载 50MHz
+    wire clk     = clk_sys;          // 兼容旧命名
     wire rst = ~rst_n;
 
     //====================================================================
     // 参数：周期数 N 与计数宽度
     //====================================================================
-    // 目标：测 N 个周期（约 400 个周期 -> ~128us）
-    localparam integer N_CYCLES       = 400;
-    localparam [23:0] N_CYCLES_CONST  = 24'd400;
+    // 目标：测 N 个周期（回退到 N=1600，对比之前 200MHz 阶段的行为）
+    localparam integer N_CYCLES       = 1600;
+    localparam [23:0] N_CYCLES_CONST  = 24'd1600;
 
-    // 50MHz 下，C_coarse 约为 128us / 20ns = 6400，使用 24bit 足够
+    // C_coarse 量级估算（200MHz 下）:
+    //   T_meas ≈ N / f_sensor ≈ 1600 / 3.1MHz ≈ 0.52ms
+    //   C_coarse ≈ T_meas * 200MHz ≈ 1.0e5 < 2^24
     localparam integer COARSE_WIDTH   = 24;
 
     //====================================================================
+    //====================================================================
+    // fast 域时钟：由 rPLL 产生，频率约为 200MHz（REF_CLK_FAST_HZ）
+    //====================================================================
+    wire clk_fast;
+    wire pll_lock;
+
+    Gowin_rPLL u_pll_fast (
+        .clkout(clk_fast),
+        .lock  (pll_lock),
+        .clkin (clk_sys)
+    );
+
+    //====================================================================
     // fast 核心：在 clk_fast 域进行 N 周期互易计数 + 粗 TDC
-    // 当前阶段我们先让 clk_fast = clk（都是 50MHz），
-    // 只完成结构拆分，后续再接入 rPLL 将 clk_fast 提升到更高频。
     //====================================================================
     wire                    tdc_busy_fast;
     wire                    tdc_valid_fast;
     wire                    tdc_ack_fast;
     wire [COARSE_WIDTH-1:0] tdc_coarse_fast;
     wire [7:0]              tdc_fine_raw_fast;
-
-    // 当前骨架阶段：fast 域和 sys 域使用同一时钟
-    wire clk_fast = clk;
 
     recip_core_fast #(
         .N_CYCLES    (N_CYCLES),
@@ -92,6 +108,7 @@ module freq_recip_uart_ch0_top (
     reg [COARSE_WIDTH-1:0]   coarse_latched = {COARSE_WIDTH{1'b0}};
     reg                      result_valid   = 1'b0;
 
+    // 将 fast 域 valid 同步到 sys 域
     reg tdc_valid_sync1 = 1'b0;
     reg tdc_valid_sync2 = 1'b0;
 
@@ -107,24 +124,40 @@ module freq_recip_uart_ch0_top (
 
     wire tdc_valid_clk = tdc_valid_sync1 & ~tdc_valid_sync2;
 
-    reg tdc_ack_reg = 1'b0;
-    assign tdc_ack_fast = tdc_ack_reg;
+    // toggle 握手：sys 域每消费一次结果翻转一次 ack_toggle_clk
+    reg ack_toggle_clk = 1'b0;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             coarse_latched <= {COARSE_WIDTH{1'b0}};
             result_valid   <= 1'b0;
-            tdc_ack_reg    <= 1'b0;
+            ack_toggle_clk <= 1'b0;
         end else begin
             result_valid <= 1'b0;
-            tdc_ack_reg  <= 1'b0;
+
             if (tdc_valid_clk) begin
                 coarse_latched <= tdc_coarse_fast;
                 result_valid   <= 1'b1;
-                tdc_ack_reg    <= 1'b1; // 告知 fast 域结果已消费，清除 valid
+                ack_toggle_clk <= ~ack_toggle_clk; // 触发一次 ack 事件
             end
         end
     end
+
+    // 在 fast 域同步 ack_toggle_clk，并将其边沿转换成单周期 tdc_ack_fast 脉冲
+    reg ack_sync1 = 1'b0;
+    reg ack_sync2 = 1'b0;
+
+    always @(posedge clk_fast or posedge rst) begin
+        if (rst) begin
+            ack_sync1 <= 1'b0;
+            ack_sync2 <= 1'b0;
+        end else begin
+            ack_sync1 <= ack_toggle_clk;
+            ack_sync2 <= ack_sync1;
+        end
+    end
+
+    assign tdc_ack_fast = ack_sync1 ^ ack_sync2;
 
     //====================================================================
     // UART 发送器实例
@@ -269,15 +302,15 @@ module freq_recip_uart_ch0_top (
     //====================================================================
     // LED 指示
     //====================================================================
-    // 未使用 PLL，led_lock 直接常亮作为“系统运行”指示
-    assign led_lock = 1'b1;
+    // 使用 PLL 后：led_lock 反映 fast 域 PLL 锁定状态
+    assign led_lock = pll_lock;
 
     // led_valid：每次 result_valid 发生时点亮，保持约 0.2s 后熄灭
     reg [23:0] led_valid_cnt = 24'd0;
     reg        led_valid_reg = 1'b0;
 
-    // 0.2s = REF_CLK_HZ / 5 个时钟周期；当前 REF_CLK_HZ=50MHz -> 10_000_000
-    localparam integer LED_VALID_HOLD = REF_CLK_HZ / 5;
+    // 0.2s = REF_CLK_SYS_HZ / 5 个 sys 时钟周期；当前 REF_CLK_SYS_HZ=50MHz -> 10_000_000
+    localparam integer LED_VALID_HOLD = REF_CLK_SYS_HZ / 5;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
