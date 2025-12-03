@@ -1,0 +1,31 @@
+//==============================================================================
+// 单通道频率测量 + UART 输出工程引脚约束
+// 目标板卡：GW1N 入门开发板（GW1N-LV9QN48C6/I5, QFN48）
+// 顶层模块：freq_uart_ch0_top
+//==============================================================================
+
+// 时钟与复位
+IO_LOC  "sys_clk_50m" 27;          // 板载 50MHz 晶振
+IO_PORT "sys_clk_50m" IO_TYPE=LVCMOS33;
+
+IO_LOC  "rst_n" 28;                // 复位按钮（低有效）
+IO_PORT "rst_n" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+// 单通道传感器输入（CH0）
+// 传感器蓝线接到：J2 上排第2针 -> J2-3 -> FPGA 管脚 3
+IO_LOC  "sensor0" 3;
+// 开启施密特触发输入以减小门限附近噪声导致的抖动
+IO_PORT "sensor0" IO_TYPE=LVCMOS33 SCHMITT=YES;
+
+// UART TX 输出（Pin16，经 J2 下排第9针 接到 CP2102 RXD）
+IO_LOC  "uart_tx" 16;
+IO_PORT "uart_tx" IO_TYPE=LVCMOS33 DRIVE=8;
+
+// LED 指示灯
+// D14: led_lock（PLL 锁定指示）
+IO_LOC  "led_lock" 11;
+IO_PORT "led_lock" IO_TYPE=LVCMOS33 DRIVE=8;
+
+// D13: led_valid（测量结果有效指示）
+IO_LOC  "led_valid" 9;
+IO_PORT "led_valid" IO_TYPE=LVCMOS33 DRIVE=8;
