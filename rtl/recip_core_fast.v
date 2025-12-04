@@ -29,11 +29,11 @@ module recip_core_fast #(
     input  wire                   sensor0,
 
     // TDC 结果 fast 域接口
-    output wire                   tdc_busy,
-    output wire                   tdc_valid_fast,
-    input  wire                   tdc_ack_fast,
+    output wire                    tdc_busy,
+    output wire                    tdc_valid_fast,
+    input  wire                    tdc_ack_fast,
     output wire [COARSE_WIDTH-1:0] tdc_coarse_fast,
-    output wire [7:0]             tdc_fine_raw_fast
+    output reg  [7:0]              tdc_fine_raw_fast
 );
 
     //====================================================================
@@ -90,8 +90,10 @@ module recip_core_fast #(
     end
 
     //====================================================================
-    // fast 域 simple_tdc_core
+    // fast 域 simple_tdc_core：负责粗时间计数
     //====================================================================
+    wire [7:0] fine_raw_unused;
+
     simple_tdc_core #(
         .COARSE_WIDTH(COARSE_WIDTH),
         .FINE_WIDTH  (8)
@@ -104,10 +106,24 @@ module recip_core_fast #(
         .busy        (tdc_busy),
         .valid       (tdc_valid_fast),
         .coarse_count(tdc_coarse_fast),
-        .fine_raw    (tdc_fine_raw_fast)
+        .fine_raw    (fine_raw_unused)
     );
+
+    //====================================================================
+    // fast 域细时间采样（初版占位）：
+    //   - 目前先直接导出边沿计数的低 8 位，作为调试占位符；
+    //   - 后续将在此处接入基于 carry-chain 的 TDL 输出。
+    //====================================================================
+    always @(posedge clk_fast or posedge rst) begin
+        if (rst) begin
+            tdc_fine_raw_fast <= 8'd0;
+        end else if (tdc_stop_fast) begin
+            // 占位实现：用 edge_count_fast 的低 8 位作为 fine_raw，
+            // 确保数据通路打通，方便后续替换为真正 TDL 细分。
+            tdc_fine_raw_fast <= edge_count_fast[7:0];
+        end
+    end
 
 endmodule
 
 `default_nettype wire
-
