@@ -16,7 +16,7 @@
 
 - 顶层模块：`freq_recip_uart_ch0_top`
 - 计数时钟：`sys_clk_50m` (50 MHz)
-- 测量对象：传感器通道 0 (`sensor0`，接在 J2 上排第 2 针 → FPGA Pin3)
+- 测量对象：传感器通道 0 (`sensor0`，接在 J2 下排第 5 针 → FPGA Pin10)
 - 测量方法：互易计数
   - 先等待 `sensor0` 的第 1 个上升沿；
   - 从第 1 个上升沿开始，用 50 MHz 计数；
@@ -130,6 +130,62 @@ openFPGALoader -c ft232 build_fpga/freq_recip_uart_ch0_top.fs
 - D13 会周期性点亮一小段时间，表示每次完成一组测量。
 
 然后可以使用 Rust GUI 或 Python `freq_live_plot.py` 来监控频率。
+
+---
+
+## HELLO 自检程序（上电自测试）
+
+仓库里额外提供了一个最小 UART+LED 的自检顶层 `uart_hello_top`（`fpga-GW1N/rtl/uart_hello_top.v`），用于在调试硬件连线时做最基础的检查：
+
+- 上电后每秒通过 UART 发送一行 `"HELLO\r\n"`；
+- `led_lock` 常亮；
+- `led_valid` 约 1 秒闪烁一次；
+- 约束仍复用 `project/freq_recip_uart_ch0.cst`，所以 UART 仍在 FPGA Pin16 → J2 下排第 9 针 → CP2102 RXD。
+
+### 1. 在你自己的终端里编译 + 烧录（SRAM，掉电丢失）
+
+请在普通终端（不是本 CLI）里执行：
+
+```bash
+cd /Users/jqwang/133-力传感器-fpga
+source .venv_uart/bin/activate
+
+cd fpga-GW1N
+make -f Makefile_hello        # 综合 + 布线 + 生成 build_fpga/uart_hello_top.fs
+make -f Makefile_hello prog   # 通过 FT232 烧录 HELLO 测试（写入 SRAM）
+```
+
+如果有报错，把那段终端输出原样贴出来，按实际报错排查。
+
+### 2. 烧录后检查
+
+1. 确认连线：
+   - `uart_tx`：FPGA Pin16 → J2 下排第 9 针 → CP2102 RXD
+2. 找到 CP2102 对应串口，例如：
+
+   ```bash
+   ls /dev/cu.usbserial-*
+   ```
+
+3. 用串口工具看输出（假设设备是 `/dev/cu.usbserial-0001`）：
+
+   ```bash
+   screen /dev/cu.usbserial-0001 115200
+   ```
+
+   应该看到每秒一行：
+
+   ```text
+   HELLO
+   HELLO
+   ...
+   ```
+
+   退出 `screen`：先按 `Ctrl+A`，再按 `K`，最后按 `y` 确认。
+
+4. 板子上：
+   - `led_lock` 常亮；
+   - `led_valid` 按约 1 秒频率闪烁。
 
 ---
 

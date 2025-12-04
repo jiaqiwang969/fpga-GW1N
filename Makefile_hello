@@ -1,0 +1,87 @@
+#==============================================================================
+# GW1N-LV9 最小 UART+LED “HELLO” 测试工程 Makefile
+#------------------------------------------------------------------------------
+# 顶层模块 : uart_hello_top
+# 功能     :
+#   - 每秒通过 uart_tx 发送 "HELLO\r\n"
+#   - led_lock 常亮，led_valid 约 1Hz 闪烁
+# 引脚约束 :
+#   - 复用 project/freq_recip_uart_ch0.cst
+#     (sys_clk_50m / rst_n / uart_tx / led_lock / led_valid)
+#==============================================================================
+
+DEVICE      := GW1N-LV9QN48C6/I5
+FAMILY      := GW1N-9
+
+RTL_DIR     := rtl
+PROJ_DIR    := project
+# 复用已有的 build_fpga 目录，避免新建目录失败
+BUILD_DIR   := build_fpga
+
+TOP         := uart_hello_top
+
+VERILOG_SRCS := \
+	$(RTL_DIR)/uart_tx.v \
+	$(RTL_DIR)/uart_hello_top.v
+
+CST_FILE    := $(PROJ_DIR)/freq_recip_uart_ch0.cst
+
+JSON_FILE   := $(BUILD_DIR)/$(TOP).json
+PNR_FILE    := $(BUILD_DIR)/$(TOP)_pnr.json
+BIT_FILE    := $(BUILD_DIR)/$(TOP).fs
+
+.PHONY: all
+all: $(BIT_FILE)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(JSON_FILE): $(VERILOG_SRCS) | $(BUILD_DIR)
+	@echo "=========================================="
+	@echo "综合 HELLO 测试 (Yosys + synth_gowin)..."
+	@echo "  顶层: $(TOP)"
+	@echo "=========================================="
+	yosys -p "read_verilog $(VERILOG_SRCS); synth_gowin -top $(TOP) -noabc9 -json $(JSON_FILE)"
+
+$(PNR_FILE): $(JSON_FILE) $(CST_FILE)
+	@echo "=========================================="
+	@echo "布局布线 HELLO 测试 (nextpnr-himbaechel)..."
+	@echo "  器件 : $(DEVICE)"
+	@echo "  家族 : $(FAMILY)"
+	@echo "  约束 : $(CST_FILE)"
+	@echo "=========================================="
+	nextpnr-himbaechel \
+		--json $(JSON_FILE) \
+		--write $(PNR_FILE) \
+		--device $(DEVICE) \
+		--vopt family=$(FAMILY) \
+		--vopt cst=$(CST_FILE)
+
+$(BIT_FILE): $(PNR_FILE)
+	@echo "=========================================="
+	@echo "生成 HELLO 测试比特流 (gowin_pack)..."
+	@echo "  输入 : $(PNR_FILE)"
+	@echo "  输出 : $(BIT_FILE)"
+	@echo "=========================================="
+	gowin_pack -d $(FAMILY) -o $(BIT_FILE) $(PNR_FILE)
+
+.PHONY: prog
+prog: $(BIT_FILE)
+	@echo "=========================================="
+	@echo "下载 HELLO 测试到 FPGA (openFPGALoader, SRAM 模式)..."
+	@echo "  使用 FT232 JTAG 接口 (--c ft232)"
+	@echo "=========================================="
+	openFPGALoader -c ft232 $(BIT_FILE)
+
+.PHONY: prog_flash
+prog_flash: $(BIT_FILE)
+	@echo "=========================================="
+	@echo "将 HELLO 测试写入 SPI Flash（掉电不丢失）..."
+	@echo "  使用 FT232 JTAG 接口 (--c ft232, --write-flash)"
+	@echo "=========================================="
+	openFPGALoader -c ft232 -f $(BIT_FILE)
+
+.PHONY: clean
+clean:
+	@echo "清理 HELLO 测试生成的文件 (保留目录 $(BUILD_DIR))"
+	rm -f $(JSON_FILE) $(PNR_FILE) $(BIT_FILE)
