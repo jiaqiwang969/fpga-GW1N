@@ -1,0 +1,62 @@
+@startuml
+title Stop-side TDC timing within simple_tdc_core (conceptual)
+
+actor "sensor0 edge\n(sensor_edge_fast)" as SE
+participant "recip_core_fast\n(FSM in clk_fast domain)" as RCF
+participant "simple_tdc_core\n(coarse counter + TDL)" as TDC
+participant "TDL delay line\n(carry-chain)" as TDL
+participant "TDL sample FFs\n(latched on clk_fast)" as SAMPLE
+participant "freq_recip_uart_ch0_top\n(UART formatter)" as TOP
+
+== Start of one measurement window ==
+
+SE -> RCF : first rising edge of sensor0\n(sensor_edge_fast = 1 clk)
+RCF -> TDC : tdc_start_fast (1 clk)\ncoarse counter reset & start
+note right of TDC
+  While busy=1:\n
+  coarse counter increments\n
+  on each clk_fast rising edge.
+end note
+
+... N-2 further sensor edges ...
+
+== Stop event (Nth edge) ==
+
+SE -> RCF : Nth rising edge of sensor0\n(sensor_edge_fast = 1 clk)
+RCF -> TDC : tdc_stop_fast (1 clk)\n"stop" pulse in clk_fast domain
+
+group Coarse time capture
+  TDC -> TDC : on tdc_stop_fast and next clk_fast\nlatch coarse_count into register\nset valid=1, busy=0
+end group
+
+group Fine time capture (stop-side TDL)
+  note over TDL
+    Idea: the stop event edge is routed\n
+    into a carry-chain delay line.\n
+    During the fraction of one clk_fast period\n
+    before the next rising edge, the edge\n
+    propagates along the TDL cells.
+  end note
+
+  RCF -> TDL : stop event edge\n(drives TDL input)
+  TDC -> SAMPLE : on next clk_fast rising edge\nsample all TDL taps at once
+  SAMPLE -> TDC : hot-code vector (e.g. 111110000...)\nrepresents fine_stop
+  TDC -> TDC : encode hot-code -> fine_raw\n(0 .. K-1 sub-bins within 1 clk_fast)
+end group
+
+== Hand-off to UART path ==
+
+TDC -> TOP : tdc_valid_fast +\ncoarse_count + fine_raw\n(synchronized into sys_clk domain)
+TOP -> TOP : format ASCII line\n e.g. \"R=NNNNNN,CCCCCC,FF\\r\\n\"
+
+TOP -> "PC GUI\n(freq_plotter)" : UART text line
+note right
+  GUI parses N, C, F and computes\n
+  T_est ≈ (C * T_fast) + (F/K)*T_fast\n
+  f_est ≈ N / T_est\n
+  to compare coarse-only vs\n
+  coarse+fine frequency jitter.
+end note
+
+@enduml
+
