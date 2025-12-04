@@ -119,15 +119,25 @@ module recip_core_fast #(
 
 generate
 if (USE_TDL) begin : GEN_TDL_FINE
-    // 后续真正启用 TDL 时，将在此分支实例化 tdl_fine_stop，
-    // 并在 tdc_stop_fast 脉冲时锁存细时间编码到 tdc_fine_raw_fast。
+    // 使用与独立诊断顶层相同的 TDL 结构，但在 fast 域 (clk_fast) 下工作。
+    wire [7:0] fine_code_current;
+
+    tdl_fine_stop #(
+        .TDL_TAPS   (32),
+        .CODE_WIDTH (8)
+    ) u_tdl_fine_stop (
+        .clk_fast    (clk_fast),
+        .rst         (rst),
+        .signal_async(sensor0),
+        .fine_code   (fine_code_current)
+    );
+
+    // 在 tdc_stop_fast 脉冲到来时锁存当前细时间编码
     always @(posedge clk_fast or posedge rst) begin
         if (rst) begin
             tdc_fine_raw_fast <= 8'd0;
         end else if (tdc_stop_fast) begin
-            // 暂时保持占位行为，保证综合结果与 USE_TDL=0 一致；
-            // 未来启用 TDL 时，这里会改为锁存 TDL 输出。
-            tdc_fine_raw_fast <= edge_count_fast[7:0];
+            tdc_fine_raw_fast <= fine_code_current;
         end
     end
 end else begin : GEN_PLACEHOLDER_FINE
