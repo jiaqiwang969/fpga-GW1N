@@ -120,8 +120,6 @@ module recip_core_fast #(
 generate
 if (USE_TDL) begin : GEN_TDL_FINE
     // 使用与独立诊断顶层相同的 TDL 结构，但在 fast 域 (clk_fast) 下工作。
-    // 通过在 start / stop 脉冲时分别锁存相位编码，并在 stop 时计算差分，
-    // 得到本次测量区间内的细时间 delta。
     wire [7:0] fine_code_current;
 
     tdl_fine_stop #(
@@ -134,25 +132,12 @@ if (USE_TDL) begin : GEN_TDL_FINE
         .fine_code   (fine_code_current)
     );
 
-    reg [7:0] fine_start_latched = 8'd0;
-    reg [7:0] fine_stop_latched  = 8'd0;
-
+    // 在 tdc_stop_fast 脉冲到来时锁存当前细时间编码
     always @(posedge clk_fast or posedge rst) begin
         if (rst) begin
-            fine_start_latched <= 8'd0;
-            fine_stop_latched  <= 8'd0;
-            tdc_fine_raw_fast  <= 8'd0;
-        end else begin
-            // 在 start 边沿锁存一次相位
-            if (tdc_start_fast) begin
-                fine_start_latched <= fine_code_current;
-            end
-
-            // 在 stop 边沿锁存相位并输出差分（模 256）
-            if (tdc_stop_fast) begin
-                fine_stop_latched <= fine_code_current;
-                tdc_fine_raw_fast <= fine_code_current - fine_start_latched;
-            end
+            tdc_fine_raw_fast <= 8'd0;
+        end else if (tdc_stop_fast) begin
+            tdc_fine_raw_fast <= fine_code_current;
         end
     end
 end else begin : GEN_PLACEHOLDER_FINE
