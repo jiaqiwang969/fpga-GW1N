@@ -38,8 +38,12 @@ struct MonitorApp {
 }
 
 impl MonitorApp {
-    fn new(window_sec: usize, channel_name: String) -> Self {
-        let window = MeasurementWindow::new_with_channels(window_sec, vec![channel_name]);
+    fn new(window_sec: usize) -> Self {
+        // 两个通道：粗频率 & 粗+细频率
+        let window = MeasurementWindow::new_with_channels(
+            window_sec,
+            vec!["freq_coarse".to_string(), "freq_tdl".to_string()],
+        );
         Self {
             measurements: Arc::new(Mutex::new(window)),
         }
@@ -56,7 +60,8 @@ impl eframe::App for MonitorApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("FPGA 互易频率计数 - 实时曲线");
-            ui.label("数据源: 串口 R=NNNNNN,CCCCCC 行，f = N * clk / C");
+            ui.label("数据源: 串口 R=NNNNNN,CCCCCC[,FF] 行；");
+            ui.label("freq_coarse = N * clk / C,  freq_tdl ≈ N / ((C + frac(F)) / clk)");
             ui.add_space(8.0);
 
             Plot::new("freq_plot")
@@ -127,13 +132,33 @@ fn uart_loop(
                 let line_str = String::from_utf8_lossy(&line_bytes);
                 let text = line_str.trim();
 
-                if let Some((n_cycles, c_coarse)) = parse_recip_line(text) {
+                if let Some((n_cycles, c_coarse, f_fine)) = parse_recip_line(text) {
                     if n_cycles > 0 && c_coarse > 0 {
-                        let f_hz = n_cycles as f64 * clk_hz / (c_coarse as f64);
+                        // 粗频率
+                        let f_coarse = n_cycles as f64 * clk_hz / (c_coarse as f64);
+
+                        // 细时间修正：
+                        //   - 假定 fine_raw 在 [F_MIN, F_MAX] 间近似线性分布；
+                        //   - 将 F 映射到 [0, 1) 的 frac(F)；
+                        //   - T_est ≈ (C + frac(F)) / clk_hz, f_tdl ≈ N / T_est。
+                        //
+                        // 这里先用实验阶段固定参数，可根据 TDL 实测分布调整。
+                        const F_MIN: f64 = 0.0;
+                        const F_MAX: f64 = 21.0; // 对应 0x15，在 50MHz 诊断中观测到
+                        let frac_f = if f_fine >= F_MIN && f_fine <= F_MAX {
+                            (f_fine - F_MIN) / (F_MAX - F_MIN + 1.0)
+                        } else {
+                            0.0
+                        };
+
+                        let c_plus_frac = (c_coarse as f64) + frac_f;
+                        let t_est = c_plus_frac / clk_hz;
+                        let f_tdl = n_cycles as f64 / t_est;
+
                         let t_sec = t0.elapsed().as_secs_f64();
 
                         if let Ok(mut win) = monitor_ref.lock() {
-                            win.add_row(t_sec, &[f_hz]);
+                            win.add_row(t_sec, &[f_coarse, f_tdl]);
                         }
                     }
                 }
@@ -145,7 +170,8 @@ fn uart_loop(
 }
 
 /// 解析 "R=NNNNNN,CCCCCC" 或 "R=NNNNNN,CCCCCC,FF" 行
-fn parse_recip_line(text: &str) -> Option<(u32, u32)> {
+/// 返回 (N, C, F)，其中 F 为 fine_raw 的数值（若没有则为 0）
+fn parse_recip_line(text: &str) -> Option<(u32, u32, f64)> {
     if !text.starts_with("R=") {
         return None;
     }
@@ -156,12 +182,18 @@ fn parse_recip_line(text: &str) -> Option<(u32, u32)> {
     let mut parts = body.split(',').map(|s| s.trim());
     let n_hex = parts.next()?;
     let c_hex = parts.next()?;
-    // 第三个字段（fine）目前先忽略，只做占位
-    let _fine_hex = parts.next();
+    let fine_hex_opt = parts.next();
 
     let n_cycles = u32::from_str_radix(n_hex, 16).ok()?;
     let c_coarse = u32::from_str_radix(c_hex, 16).ok()?;
-    Some((n_cycles, c_coarse))
+
+    let f_fine = if let Some(fh) = fine_hex_opt {
+        u32::from_str_radix(fh, 16).ok().map(|v| v as f64).unwrap_or(0.0)
+    } else {
+        0.0
+    };
+
+    Some((n_cycles, c_coarse, f_fine))
 }
 
 fn main() -> Result<()> {
@@ -173,15 +205,14 @@ fn main() -> Result<()> {
     tracing::subscriber::set_global_default(subscriber)
         .expect("setting default subscriber failed");
 
-    let channel_name = "freq_hz".to_string();
-    let mut app = MonitorApp::new(args.window_sec, channel_name.clone());
+    let mut app = MonitorApp::new(args.window_sec);
 
     let monitor_ref = app.measurements.clone();
     spawn_uart_thread(monitor_ref, args.port.clone(), args.baud, args.clk);
 
     info!(
-        "启动 GUI：窗口={}s, 串口={}, 波特率={}, clk={} Hz, 通道={}",
-        args.window_sec, args.port, args.baud, args.clk, channel_name
+        "启动 GUI：窗口={}s, 串口={}, 波特率={}, clk={} Hz, 通道=freq_coarse,freq_tdl",
+        args.window_sec, args.port, args.baud, args.clk
     );
 
     let native_options = eframe::NativeOptions::default();
