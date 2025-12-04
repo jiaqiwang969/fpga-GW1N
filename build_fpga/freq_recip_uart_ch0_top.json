@@ -31224,7 +31224,7 @@
             "module": "$paramod$d1aaff872a77f67c8137e3c62612e42c8c55fcab\\recip_core_fast",
             "module_dynports": "00000000000000000000000000000001",
             "module_hdlname": "recip_core_fast",
-            "module_src": "rtl/recip_core_fast.v:21.1-127.10"
+            "module_src": "rtl/recip_core_fast.v:21.1-146.10"
           },
           "port_directions": {
           },
@@ -31238,7 +31238,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31262,7 +31262,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31286,7 +31286,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31310,7 +31310,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31334,7 +31334,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31358,7 +31358,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31382,7 +31382,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31406,7 +31406,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31447,7 +31447,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31471,7 +31471,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31495,7 +31495,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31519,7 +31519,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31543,7 +31543,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31567,7 +31567,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31591,7 +31591,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31615,7 +31615,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:117.5-125.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:134.5-142.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31639,7 +31639,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
           },
           "port_directions": {
             "CLEAR": "input",
@@ -31687,7 +31687,7 @@
           },
           "attributes": {
             "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "rtl/recip_core_fast.v:44.17-49.6",
+            "cell_src": "rtl/recip_core_fast.v:46.17-51.6",
             "hdlname": "u_recip_core_fast u_edge_sensor_fast",
             "module": "edge_detect",
             "module_src": "rtl/edge_detect.v:8.1-33.10"
@@ -31863,7 +31863,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31887,7 +31887,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31911,7 +31911,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31935,7 +31935,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -31959,7 +31959,7 @@
             "TYPE": "module"
           },
           "attributes": {
-            "cell_src": "rtl/recip_core_fast.v:100.7-110.6",
+            "cell_src": "rtl/recip_core_fast.v:102.7-112.6",
             "hdlname": "u_recip_core_fast u_tdc_core_fast",
             "module": "$paramod$e5a3c6315fff8c88784bdfc22a54913bd40b105e\\simple_tdc_core",
             "module_dynports": "00000000000000000000000000000001",
@@ -33129,7 +33129,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
           },
           "port_directions": {
             "CLEAR": "input",
@@ -33240,7 +33240,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -33264,7 +33264,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -33364,7 +33364,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33391,7 +33391,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33418,7 +33418,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33445,7 +33445,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33472,7 +33472,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33520,7 +33520,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33547,7 +33547,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33574,7 +33574,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33706,7 +33706,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33754,7 +33754,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33802,7 +33802,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33850,7 +33850,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33898,7 +33898,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33925,7 +33925,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -33973,7 +33973,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -34021,7 +34021,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5"
           },
           "port_directions": {
             "CIN": "input",
@@ -34137,7 +34137,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -34161,7 +34161,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:115.8-115.68"
           },
           "port_directions": {
             "CE": "input",
@@ -35384,7 +35384,7 @@
           },
           "attributes": {
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:61.5-90.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
+            "src": "rtl/recip_core_fast.v:63.5-92.8|/opt/homebrew/bin/../share/yosys/gowin/cells_map.v:91.7-91.59"
           },
           "port_directions": {
             "CLEAR": "input",
@@ -44127,7 +44127,7 @@
           "bits": [ 9 ],
           "attributes": {
             "hdlname": "u_recip_core_fast clk_fast",
-            "src": "rtl/recip_core_fast.v:25.35-25.43"
+            "src": "rtl/recip_core_fast.v:27.35-27.43"
           }
         },
         "u_recip_core_fast.edge_count_fast": {
@@ -44135,7 +44135,7 @@
           "bits": [ 743, 741, 739, 737, 735, 733, 731, 729, 1128, 1129, 1130, 1131, 1132, 1133, 1134, 1135 ],
           "attributes": {
             "hdlname": "u_recip_core_fast edge_count_fast",
-            "src": "rtl/recip_core_fast.v:57.16-57.31",
+            "src": "rtl/recip_core_fast.v:59.16-59.31",
             "unused_bits": "8 9 10 11 12 13 14 15"
           }
         },
@@ -44144,7 +44144,7 @@
           "bits": [ 744 ],
           "attributes": {
             "hdlname": "u_recip_core_fast sensor0",
-            "src": "rtl/recip_core_fast.v:29.35-29.42"
+            "src": "rtl/recip_core_fast.v:31.35-31.42"
           }
         },
         "u_recip_core_fast.tdc_coarse_fast": {
@@ -44152,7 +44152,7 @@
           "bits": [ 53, 51, 49, 47, 43, 41, 39, 37, 35, 33, 31, 29, 27, 25, 67, 65, 63, 61, 59, 57, 55, 45, 23, 21 ],
           "attributes": {
             "hdlname": "u_recip_core_fast tdc_coarse_fast",
-            "src": "rtl/recip_core_fast.v:35.36-35.51"
+            "src": "rtl/recip_core_fast.v:37.36-37.51"
           }
         },
         "u_recip_core_fast.tdc_fine_raw_fast": {
@@ -44160,7 +44160,7 @@
           "bits": [ 587, 586, 585, 584, 583, 582, 581, 580 ],
           "attributes": {
             "hdlname": "u_recip_core_fast tdc_fine_raw_fast",
-            "src": "rtl/recip_core_fast.v:36.36-36.53"
+            "src": "rtl/recip_core_fast.v:38.36-38.53"
           }
         },
         "u_recip_core_fast.tdc_stop_fast": {
@@ -44168,7 +44168,7 @@
           "bits": [ 14 ],
           "attributes": {
             "hdlname": "u_recip_core_fast tdc_stop_fast",
-            "src": "rtl/recip_core_fast.v:59.16-59.29"
+            "src": "rtl/recip_core_fast.v:61.16-61.29"
           }
         },
         "u_recip_core_fast.tdc_stop_fast_DFFC_Q_D": {
@@ -44182,7 +44182,7 @@
           "bits": [ 17 ],
           "attributes": {
             "hdlname": "u_recip_core_fast tdc_valid_fast",
-            "src": "rtl/recip_core_fast.v:33.36-33.50"
+            "src": "rtl/recip_core_fast.v:35.36-35.50"
           }
         },
         "u_recip_core_fast.u_edge_sensor_fast.clk": {
@@ -44341,7 +44341,7 @@
           "bits": [ 826 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_1_CIN_ALU_COUT_SUM": {
@@ -44357,7 +44357,7 @@
           "bits": [ 827 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_1_COUT_ALU_CIN_COUT": {
@@ -44365,7 +44365,7 @@
           "bits": [ 831 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_1_COUT_ALU_CIN_COUT_ALU_CIN_COUT": {
@@ -44373,7 +44373,7 @@
           "bits": [ 833 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_1_COUT_ALU_CIN_SUM": {
@@ -44397,7 +44397,7 @@
           "bits": [ 823 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_CIN_ALU_COUT_CIN": {
@@ -44405,7 +44405,7 @@
           "bits": [ 836 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_CIN_ALU_COUT_SUM": {
@@ -44421,7 +44421,7 @@
           "bits": [ 824 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_COUT_ALU_CIN_COUT": {
@@ -44429,7 +44429,7 @@
           "bits": [ 829 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_COUT_ALU_CIN_SUM": {
@@ -44467,7 +44467,7 @@
           "bits": [ 838 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_3_I1": {
@@ -44483,7 +44483,7 @@
           "bits": [ 843 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_4_I1": {
@@ -44499,7 +44499,7 @@
           "bits": [ 845 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_5_I1": {
@@ -44515,7 +44515,7 @@
           "bits": [ 847 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_6_I1": {
@@ -44531,7 +44531,7 @@
           "bits": [ 851 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_6_I1_ALU_SUM_CIN_ALU_COUT_SUM": {
@@ -44546,7 +44546,7 @@
           "bits": [ 849 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_7_I1": {
@@ -44562,7 +44562,7 @@
           "bits": [ 855 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29",
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29",
             "unused_bits": "0 "
           }
         },
@@ -44579,7 +44579,7 @@
           "bits": [ 854 ],
           "attributes": {
             "abc9_carry": "00000000000000000000000000000001",
-            "src": "rtl/recip_core_fast.v:85.44-85.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
+            "src": "rtl/recip_core_fast.v:87.44-87.67|/opt/homebrew/bin/../share/yosys/gowin/arith_map.v:57.7-63.5|/opt/homebrew/bin/../share/yosys/gowin/cells_sim.v:938.25-938.29"
           }
         },
         "u_recip_core_fast.u_tdc_core_fast.valid_LUT4_I0_F_MUX2_LUT5_O_S0_LUT4_F_I0_ALU_I1_SUM_LUT2_I1_F_LUT2_F_9_I1": {

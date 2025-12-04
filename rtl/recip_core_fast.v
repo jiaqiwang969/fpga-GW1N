@@ -20,7 +20,9 @@
 
 module recip_core_fast #(
     parameter integer N_CYCLES     = 400,
-    parameter integer COARSE_WIDTH = 24
+    parameter integer COARSE_WIDTH = 24,
+    // 是否在 fast 域启用 TDL 细时间测量（默认关闭，保持与旧版本一致）
+    parameter         USE_TDL      = 1'b0
 )(
     input  wire                   clk_fast,       // fast 域时钟（当前可等于 50MHz）
     input  wire                   rst,            // 同步复位，高有效
@@ -110,10 +112,25 @@ module recip_core_fast #(
     );
 
     //====================================================================
-    // fast 域细时间采样（初版占位）：
-    //   - 目前先直接导出边沿计数的低 8 位，作为调试占位符；
-    //   - 后续将在此处接入基于 carry-chain 的 TDL 输出。
+    // fast 域细时间采样：
+    //   - 默认 (USE_TDL=0) 仍使用占位实现，完全不改变旧行为；
+    //   - 当 USE_TDL=1 时，将在此处接入基于 carry-chain 的 TDL。
     //====================================================================
+
+generate
+if (USE_TDL) begin : GEN_TDL_FINE
+    // 后续真正启用 TDL 时，将在此分支实例化 tdl_fine_stop，
+    // 并在 tdc_stop_fast 脉冲时锁存细时间编码到 tdc_fine_raw_fast。
+    always @(posedge clk_fast or posedge rst) begin
+        if (rst) begin
+            tdc_fine_raw_fast <= 8'd0;
+        end else if (tdc_stop_fast) begin
+            // 暂时保持占位行为，保证综合结果与 USE_TDL=0 一致；
+            // 未来启用 TDL 时，这里会改为锁存 TDL 输出。
+            tdc_fine_raw_fast <= edge_count_fast[7:0];
+        end
+    end
+end else begin : GEN_PLACEHOLDER_FINE
     always @(posedge clk_fast or posedge rst) begin
         if (rst) begin
             tdc_fine_raw_fast <= 8'd0;
@@ -123,6 +140,8 @@ module recip_core_fast #(
             tdc_fine_raw_fast <= edge_count_fast[7:0];
         end
     end
+end
+endgenerate
 
 endmodule
 
