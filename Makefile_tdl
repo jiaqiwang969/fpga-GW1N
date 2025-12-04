@@ -1,0 +1,84 @@
+#==============================================================================
+# GW1N-LV9 TDL 细时间诊断顶层 Makefile
+#------------------------------------------------------------------------------
+# 顶层模块 : tdl_diag_uart_top
+# 功能     :
+#   - 使用板载 50MHz 时钟作为 clk_fast；
+#   - 对异步 sensor0 通过 LUT1 链构造 TDL 并采样；
+#   - 在每次 sensor0 上升沿时，通过 UART 输出一行：
+#         "T=FF\r\n"
+#     其中 FF 为 8bit 细时间编码。
+# 引脚约束 :
+#   - 复用 project/freq_recip_uart_ch0.cst 中的 sys_clk_50m / rst_n / sensor0 /
+#     uart_tx / led_lock / led_valid 定义。
+#==============================================================================
+
+DEVICE      := GW1N-LV9QN48C6/I5
+FAMILY      := GW1N-9
+
+RTL_DIR     := rtl
+PROJ_DIR    := project
+BUILD_DIR   := build_tdl
+
+TOP         := tdl_diag_uart_top
+
+VERILOG_SRCS := \
+	$(RTL_DIR)/edge_detect.v \
+	$(RTL_DIR)/uart_tx.v \
+	$(RTL_DIR)/tdl_fine_stop.v \
+	$(RTL_DIR)/tdl_diag_uart_top.v
+
+CST_FILE    := $(PROJ_DIR)/freq_recip_uart_ch0.cst
+
+JSON_FILE   := $(BUILD_DIR)/$(TOP).json
+PNR_FILE    := $(BUILD_DIR)/$(TOP)_pnr.json
+BIT_FILE    := $(BUILD_DIR)/$(TOP).fs
+
+.PHONY: all
+all: $(BIT_FILE)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(JSON_FILE): $(VERILOG_SRCS) | $(BUILD_DIR)
+	@echo "=========================================="
+	@echo "综合 TDL 诊断顶层 (Yosys + synth_gowin)..."
+	@echo "  顶层: $(TOP)"
+	@echo "=========================================="
+	yosys -p "read_verilog $(VERILOG_SRCS); synth_gowin -top $(TOP) -json $(JSON_FILE)"
+
+$(PNR_FILE): $(JSON_FILE) $(CST_FILE)
+	@echo "=========================================="
+	@echo "布局布线 TDL 诊断顶层 (nextpnr-himbaechel)..."
+	@echo "  器件 : $(DEVICE)"
+	@echo "  家族 : $(FAMILY)"
+	@echo "  约束 : $(CST_FILE)"
+	@echo "=========================================="
+	nextpnr-himbaechel \
+		--json $(JSON_FILE) \
+		--write $(PNR_FILE) \
+		--device $(DEVICE) \
+		--vopt family=$(FAMILY) \
+		--vopt cst=$(CST_FILE)
+
+$(BIT_FILE): $(PNR_FILE)
+	@echo "=========================================="
+	@echo "生成 TDL 诊断比特流 (gowin_pack)..."
+	@echo "  输入 : $(PNR_FILE)"
+	@echo "  输出 : $(BIT_FILE)"
+	@echo "=========================================="
+	gowin_pack -d $(FAMILY) -o $(BIT_FILE) $(PNR_FILE)
+
+.PHONY: prog
+prog: $(BIT_FILE)
+	@echo "=========================================="
+	@echo "下载 TDL 诊断顶层到 FPGA (openFPGALoader, SRAM 模式)..."
+	@echo "  使用 FT232 JTAG 接口 (--c ft232)"
+	@echo "=========================================="
+	openFPGALoader -c ft232 $(BIT_FILE)
+
+.PHONY: clean
+clean:
+	@echo "清理 TDL 诊断构建目录: $(BUILD_DIR)"
+	rm -rf $(BUILD_DIR)
+
