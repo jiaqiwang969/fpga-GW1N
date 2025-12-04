@@ -106,6 +106,7 @@ module freq_recip_uart_ch0_top (
     // 但保留结构，方便后续真正跨时钟）
     //====================================================================
     reg [COARSE_WIDTH-1:0]   coarse_latched = {COARSE_WIDTH{1'b0}};
+    reg [7:0]                fine_latched   = 8'd0;
     reg                      result_valid   = 1'b0;
 
     // 将 fast 域 valid 同步到 sys 域
@@ -130,6 +131,7 @@ module freq_recip_uart_ch0_top (
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             coarse_latched <= {COARSE_WIDTH{1'b0}};
+            fine_latched   <= 8'd0;
             result_valid   <= 1'b0;
             ack_toggle_clk <= 1'b0;
         end else begin
@@ -137,6 +139,7 @@ module freq_recip_uart_ch0_top (
 
             if (tdc_valid_clk) begin
                 coarse_latched <= tdc_coarse_fast;
+                fine_latched   <= tdc_fine_raw_fast;
                 result_valid   <= 1'b1;
                 ack_toggle_clk <= ~ack_toggle_clk; // 触发一次 ack 事件
             end
@@ -177,7 +180,7 @@ module freq_recip_uart_ch0_top (
 
     //====================================================================
     // 结果 -> ASCII 文本打包
-    // 帧格式："R=NNNNNN,CCCCCC\r\n"  (共 17 字节，索引 0..16)
+    // 帧格式："R=NNNNNN,CCCCCC,FF\r\n"  (共 20 字节，索引 0..19)
     //====================================================================
 
     // 4bit nibble 转 ASCII '0'..'9','A'..'F'
@@ -191,19 +194,22 @@ module freq_recip_uart_ch0_top (
         end
     endfunction
 
-    localparam integer MSG_LAST = 16; // 0..16
+    localparam integer MSG_LAST = 19; // 0..19
 
     // 在 result_valid 时刻锁存一次结果，用于 UART 发送期间保持稳定
     reg [23:0] n_reg      = 24'd0;
     reg [23:0] coarse_reg = 24'd0;
+    reg [7:0]  fine_reg   = 8'd0;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             n_reg      <= 24'd0;
             coarse_reg <= 24'd0;
+            fine_reg   <= 8'd0;
         end else if (result_valid) begin
             n_reg      <= N_CYCLES_CONST;
             coarse_reg <= coarse_latched;
+            fine_reg   <= fine_latched;
         end
     end
 
@@ -227,8 +233,11 @@ module freq_recip_uart_ch0_top (
                 5'd12: msg_char = hex_char(coarse_reg[11:8]);
                 5'd13: msg_char = hex_char(coarse_reg[7:4]);
                 5'd14: msg_char = hex_char(coarse_reg[3:0]);
-                5'd15: msg_char = 8'h0D; // '\r'
-                5'd16: msg_char = 8'h0A; // '\n'
+                5'd15: msg_char = ","; // 分隔符，粗/细之间
+                5'd16: msg_char = hex_char(fine_reg[7:4]);
+                5'd17: msg_char = hex_char(fine_reg[3:0]);
+                5'd18: msg_char = 8'h0D; // '\r'
+                5'd19: msg_char = 8'h0A; // '\n'
                 default: msg_char = 8'h20;
             endcase
         end

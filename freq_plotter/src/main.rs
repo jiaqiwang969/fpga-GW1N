@@ -144,15 +144,23 @@ fn uart_loop(
     }
 }
 
-/// 解析 "R=NNNNNN,CCCCCC" 行
+/// 解析 "R=NNNNNN,CCCCCC" 或 "R=NNNNNN,CCCCCC,FF" 行
 fn parse_recip_line(text: &str) -> Option<(u32, u32)> {
     if !text.starts_with("R=") {
         return None;
     }
     let body = &text[2..];
-    let (n_hex, c_hex) = body.split_once(',')?;
-    let n_cycles = u32::from_str_radix(n_hex.trim(), 16).ok()?;
-    let c_coarse = u32::from_str_radix(c_hex.trim(), 16).ok()?;
+    // 兼容两种格式：
+    //   R=NNNNNN,CCCCCC
+    //   R=NNNNNN,CCCCCC,FF
+    let mut parts = body.split(',').map(|s| s.trim());
+    let n_hex = parts.next()?;
+    let c_hex = parts.next()?;
+    // 第三个字段（fine）目前先忽略，只做占位
+    let _fine_hex = parts.next();
+
+    let n_cycles = u32::from_str_radix(n_hex, 16).ok()?;
+    let c_coarse = u32::from_str_radix(c_hex, 16).ok()?;
     Some((n_cycles, c_coarse))
 }
 
