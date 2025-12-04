@@ -110,6 +110,9 @@ fn uart_loop(
     let mut buf: Vec<u8> = Vec::with_capacity(1024);
     let mut tmp = [0u8; 256];
     let t0 = Instant::now();
+    // 细时间零均值校正的运行平均（简单 EMA）
+    let mut mean_fine: f64 = 0.0;
+    let mut mean_init = false;
 
     loop {
         match sp.read(&mut tmp) {
@@ -138,24 +141,23 @@ fn uart_loop(
                         let f_coarse = n_cycles as f64 * clk_hz / (c_coarse as f64);
 
                         // 细时间修正：
-                        //   - 假定 fine_raw 在 [F_MIN, F_MAX] 间近似线性分布；
-                        //   - 将 F 映射到 [0, 1) 的 frac(F)；
-                        //   - T_est ≈ (C + frac(F)) / clk_hz, f_tdl ≈ N / T_est。
-                        //
-                        // 这里先用实验阶段固定参数，可根据 TDL 实测分布调整。
-                        const F_MIN: f64 = 0.0;
-                        const F_MAX: f64 = 21.0; // 对应 0x15，在诊断中观测到的有效范围
-                        // 为避免整体偏移，把 F 当作围绕中心值的零均值扰动：
-                        //   center ≈ (F_MIN + F_MAX) / 2
-                        //   frac_f ≈ (F - center) / span
-                        // 这样粗+细修正只改变抖动，不改变长期平均值。
-                        let frac_f = if f_fine >= F_MIN && f_fine <= F_MAX {
-                            let center = 0.5 * (F_MIN + F_MAX);
-                            let span = F_MAX - F_MIN + 1.0;
-                            (f_fine - center) / span
+                        //   - 使用运行平均消除 DC 偏移：
+                        //       mean_fine <- (1-alpha)*mean_fine + alpha*F
+                        //       delta_f   = F - mean_fine
+                        //   - frac_f = delta_f / span
+                        //   这样 (F - mean_fine) 的长期平均为 0，只带来抖动改进，不改变 DC。
+                        const ALPHA: f64 = 0.001;
+                        const SPAN: f64  = 16.0; // 缩放系数，决定细分对结果的影响幅度
+
+                        if !mean_init {
+                            mean_fine = f_fine;
+                            mean_init = true;
                         } else {
-                            0.0
-                        };
+                            mean_fine = (1.0 - ALPHA) * mean_fine + ALPHA * f_fine;
+                        }
+
+                        let delta_f = f_fine - mean_fine;
+                        let frac_f = delta_f / SPAN;
 
                         let c_plus_frac = (c_coarse as f64) + frac_f;
                         let t_est = c_plus_frac / clk_hz;
