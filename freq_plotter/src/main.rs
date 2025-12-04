@@ -144,9 +144,15 @@ fn uart_loop(
                         //
                         // 这里先用实验阶段固定参数，可根据 TDL 实测分布调整。
                         const F_MIN: f64 = 0.0;
-                        const F_MAX: f64 = 21.0; // 对应 0x15，在 50MHz 诊断中观测到
+                        const F_MAX: f64 = 21.0; // 对应 0x15，在诊断中观测到的有效范围
+                        // 为避免整体偏移，把 F 当作围绕中心值的零均值扰动：
+                        //   center ≈ (F_MIN + F_MAX) / 2
+                        //   frac_f ≈ (F - center) / span
+                        // 这样粗+细修正只改变抖动，不改变长期平均值。
                         let frac_f = if f_fine >= F_MIN && f_fine <= F_MAX {
-                            (f_fine - F_MIN) / (F_MAX - F_MIN + 1.0)
+                            let center = 0.5 * (F_MIN + F_MAX);
+                            let span = F_MAX - F_MIN + 1.0;
+                            (f_fine - center) / span
                         } else {
                             0.0
                         };
