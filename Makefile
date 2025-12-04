@@ -46,7 +46,6 @@ VERILOG_SRCS := \
 	$(RTL_DIR)/edge_detect.v \
 	$(RTL_DIR)/uart_tx.v \
 	$(RTL_DIR)/simple_tdc_core.v \
-	$(RTL_DIR)/tdl_fine_stop.v \
 	$(RTL_DIR)/gowin_rpll_400m.v \
 	$(RTL_DIR)/recip_core_fast.v \
 	$(RTL_DIR)/freq_recip_uart_ch0_top.v

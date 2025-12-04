@@ -110,30 +110,17 @@ module recip_core_fast #(
     );
 
     //====================================================================
-    // fast 域细时间采样（基于 TDL 的初版实现）：
-    //   - 使用异步 sensor0 通过 LUT1 链构成组合延迟线；
-    //   - 在 clk_fast 上升沿采样延迟线状态，编码为 fine_code_current；
-    //   - 在 tdc_stop_fast 脉冲到来时锁存当前 fine_code_current，
-    //     作为本次测量对应 stop 边沿的细时间编码。
+    // fast 域细时间采样（初版占位）：
+    //   - 目前先直接导出边沿计数的低 8 位，作为调试占位符；
+    //   - 后续将在此处接入基于 carry-chain 的 TDL 输出。
     //====================================================================
-    wire [7:0] fine_code_current;
-
-    tdl_fine_stop #(
-        .TDL_TAPS   (32),
-        .CODE_WIDTH (8)
-    ) u_tdl_fine_stop (
-        .clk_fast    (clk_fast),
-        .rst         (rst),
-        .signal_async(sensor0),
-        .fine_code   (fine_code_current)
-    );
-
     always @(posedge clk_fast or posedge rst) begin
         if (rst) begin
             tdc_fine_raw_fast <= 8'd0;
         end else if (tdc_stop_fast) begin
-            // 每次在第 N 个上升沿触发 stop 时，锁存一次细时间编码
-            tdc_fine_raw_fast <= fine_code_current;
+            // 占位实现：用 edge_count_fast 的低 8 位作为 fine_raw，
+            // 确保数据通路打通，方便后续替换为真正 TDL 细分。
+            tdc_fine_raw_fast <= edge_count_fast[7:0];
         end
     end
 
